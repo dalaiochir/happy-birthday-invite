@@ -375,6 +375,13 @@ export default function Page() {
       {/* Audio */}
       <audio ref={audioRef} src="/audio/party.mp3" preload="auto" />
 
+            {/* SHAKE CONFETTI BLAST (CSS particles) */}
+      <div className={`shakeBlast ${shakeBurst ? "on" : ""}`} aria-hidden="true">
+        {Array.from({ length: 36 }).map((_, i) => (
+          <span key={i} className="sh" style={{ "--i": i }} />
+        ))}
+      </div>
+
       {/* TOAST */}
       {toast && <div className="toast">{toast}</div>}
 
@@ -513,7 +520,7 @@ export default function Page() {
           {/* NEW: Shake enable */}
           {!shakeEnabled ? (
             <button className="chip" onClick={enableShake}>
-              💃 Shake асаах
+              💃 Shake OFF
             </button>
           ) : (
             <button className="chip on" onClick={() => setShakeEnabled(false)}>
