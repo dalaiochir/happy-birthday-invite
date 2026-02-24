@@ -432,7 +432,7 @@ export default function Page() {
             <div className="glitch" data-text="WELCOME TO CHAOS">
               WELCOME TO PARTY
             </div>
-            <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div>
+            {/* <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div> */}
           </div>
 
           <div className="rot3dWrap" aria-label="3d rotating text">
