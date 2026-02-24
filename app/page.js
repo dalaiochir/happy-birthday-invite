@@ -15,8 +15,7 @@ export default function Page() {
       address: "Улаанбаатар, СХ дүүрэг, 34 хороо,",
       mapLink: "https://maps.app.goo.gl/4CZkfovgDujN7FaZ7",
 
-      // Countdown-д ашиглах яг огноо/цаг (Asia/Ulaanbaatar гэж бодоод бичиж байна)
-      // Формат: YYYY-MM-DDTHH:mm:ss+08:00 (UB +08)
+      // Countdown-д ашиглах яг огноо/цаг (UB +08)
       eventISO: "2026-02-28T17:00:00+08:00",
 
       dresscode: "Инээдтэй / Colorful 🎭",
@@ -30,12 +29,9 @@ export default function Page() {
         "22:30 — Afterparty mode 🔥",
       ],
 
-      // RSVP холбоос (QR дээр очно)
-      // Google Form / Notion RSVP / Telegram group link гээд юу ч байж болно
       rsvpUrl: "https://t.me/+TJao7C6dhEtiZWM9",
 
-      // Random meme popup-д ашиглах local meme зургууд
-      memes: ["/memes/meme1.png", "/memes/meme2.png", "/memes/meme3.png" , "/memes/meme4.png"],
+      memes: ["/memes/meme1.png", "/memes/meme2.png", "/memes/meme3.png", "/memes/meme4.png"],
     }),
     []
   );
@@ -73,17 +69,34 @@ export default function Page() {
   // Map prank
   const [mapPrankOpen, setMapPrankOpen] = useState(false);
 
-  // 0) Fake error overlay sequence
+  // =========================
+  // NEW: Ultra Mode (Konami / party)
+  // =========================
+  const [ultra, setUltra] = useState(false);
+  const [toast, setToast] = useState("");
+
+  // =========================
+  // NEW: Screenshot Frame Mode
+  // =========================
+  const [frameOpen, setFrameOpen] = useState(false);
+
+  // =========================
+  // NEW: Dance Floor (Shake)
+  // =========================
+  const [shakeEnabled, setShakeEnabled] = useState(false);
+  const [shakeBurst, setShakeBurst] = useState(false);
+
+  // 0) Fake error overlay sequence (ЧИНИЙ ХУГАЦАА ХЭВЭЭР)
   useEffect(() => {
     const t1 = setTimeout(() => setFakeErrorStage("showJK"), 3000); // 404 -> JK
-    const t2 = setTimeout(() => setFakeErrorStage("done"), 4000); // нийт 2с
+    const t2 = setTimeout(() => setFakeErrorStage("done"), 4000); // нийт 4с
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
   }, []);
 
-  // 1) Intro дуусмагц gate нээнэ
+  // 1) Intro дуусмагц gate нээнэ (ЧИНИЙ ХУГАЦАА ХЭВЭЭР)
   useEffect(() => {
     const t = setTimeout(() => {
       setPhase("gate");
@@ -129,7 +142,7 @@ export default function Page() {
     }
   };
 
-  // 3) Countdown timer
+  // 3) Countdown timer (ЧИНИЙ interval ХЭВЭЭР: 2000ms)
   useEffect(() => {
     const target = new Date(info.eventISO).getTime();
 
@@ -158,7 +171,7 @@ export default function Page() {
     return () => clearInterval(id);
   }, [info.eventISO]);
 
-  // 4) Random meme popup: reveal болсон үед хааяа pop хийе
+  // 4) Random meme popup (ЧИНИЙ interval ХЭВЭЭР: 30000ms)
   useEffect(() => {
     if (phase !== "reveal") return;
 
@@ -190,26 +203,25 @@ export default function Page() {
     return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}`;
   }, [info.rsvpUrl]);
 
-  // Gate actions
+  // Gate actions (ЧИНИЙ хугацаа ХЭВЭЭР: 4000ms)
   const chooseGate = (choice) => {
     setGateAnswer(choice);
 
     if (choice === "corner") {
-      setGateMsg("Буланг сонгосон хүн бол амьдралын нарийн мэдрэмжтэй 🧐🍰 (VIP булан) — нэвтэр!");
+      setGateMsg("Буланг сонгосон хүн бол амьдралын нарийн мэдрэмжтэй 🧐🍰 (Perfect)");
     } else if (choice === "center") {
-      setGateMsg("Үнэхээр ТОМ зорилготой хүн байна 😤🎂 (Boss energy) — нэвтэр!");
+      setGateMsg("Үнэхээр ТОМ зорилготой хүн байна 😤🎂 (Boss energy)");
     } else {
-      setGateMsg("БҮГД гэдэг бол жинхэнэ party animal 😈🔥 (сэжигтэй) — нэвтэр!");
+      setGateMsg("БҮГД гэдэг бол жинхэнэ party animal 😈🔥 (сэжигтэй)");
     }
 
-    // 1.1 сек дараа reveal
     setTimeout(() => {
       setGateOpen(false);
       setPhase("reveal");
     }, 4000);
   };
 
-  // Map prank: fake modal -> real link
+  // Map prank (ЧИНИЙ хугацаа ХЭВЭЭР: 3500ms)
   const onMapClick = (e) => {
     e.preventDefault();
     setMapPrankOpen(true);
@@ -220,8 +232,137 @@ export default function Page() {
     }, 3500);
   };
 
+  // =========================
+  // NEW: Toast helper
+  // =========================
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 1600);
+  };
+
+  // =========================
+  // NEW: Konami + "party" Easter egg
+  // =========================
+  useEffect(() => {
+    const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let idx = 0;
+    let typed = "";
+
+    const onKeyDown = (e) => {
+      const key = e.key;
+
+      // Konami
+      const expected = KONAMI[idx];
+      if (key === expected || key.toLowerCase() === expected) {
+        idx += 1;
+        if (idx === KONAMI.length) {
+          idx = 0;
+          setUltra(true);
+          showToast("🔓 ULTRA MODE ON 😈");
+          // хүсвэл автоматаар strobe асааж болно
+          setStrobe(true);
+        }
+      } else {
+        idx = 0;
+      }
+
+      // "party" typing
+      if (key.length === 1) {
+        typed = (typed + key.toLowerCase()).slice(-12);
+        if (typed.includes("party")) {
+          typed = "";
+          setUltra(true);
+          showToast("🔓 ULTRA MODE ON 😈");
+          setStrobe(true);
+        }
+      }
+
+      // ESC to exit
+      if (key === "Escape") {
+        if (frameOpen) setFrameOpen(false);
+        if (ultra) {
+          setUltra(false);
+          showToast("😇 Ultra OFF");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ultra, frameOpen]);
+
+  // =========================
+  // NEW: Shake Mode (with iOS permission)
+  // =========================
+  const enableShake = async () => {
+    try {
+      if (typeof window !== "undefined" && typeof DeviceMotionEvent !== "undefined") {
+        // iOS 13+ permission
+        // eslint-disable-next-line no-undef
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+          // eslint-disable-next-line no-undef
+          const res = await DeviceMotionEvent.requestPermission();
+          if (res !== "granted") {
+            showToast("❌ Shake зөвшөөрөл өгөөгүй байна");
+            return;
+          }
+        }
+      }
+      setShakeEnabled(true);
+      showToast("💃 Shake ON");
+    } catch {
+      showToast("❌ Shake асааж чадсангүй");
+    }
+  };
+
+  useEffect(() => {
+    if (!shakeEnabled) return;
+
+    let last = 0;
+    let cooldown = false;
+
+    const onMotion = (event) => {
+      const a = event.accelerationIncludingGravity;
+      if (!a) return;
+
+      const x = a.x || 0;
+      const y = a.y || 0;
+      const z = a.z || 0;
+
+      const mag = Math.sqrt(x * x + y * y + z * z);
+
+      const now = Date.now();
+      if (now - last < 60) return;
+      last = now;
+
+      // threshold (хэрэв хэт мэдрэг/мэдрэхгүй байвал 16~22 гэж тааруул)
+      if (mag > 18 && !cooldown) {
+        cooldown = true;
+
+        setShakeBurst(true);
+        showToast("🔊 BASS DROP!!!");
+
+        // Түр strobe асаах (хүсэхгүй бол энэ 2 мөрийг устга)
+        setStrobe(true);
+
+        setTimeout(() => setShakeBurst(false), 700);
+        setTimeout(() => {
+          cooldown = false;
+        }, 1200);
+      }
+    };
+
+    window.addEventListener("devicemotion", onMotion, { passive: true });
+    return () => window.removeEventListener("devicemotion", onMotion);
+  }, [shakeEnabled]);
+
   return (
-    <main className={`page ${phase === "reveal" ? "phase-reveal" : "phase-intro"} ${strobe ? "strobe" : ""}`}>
+    <main
+      className={`page ${phase === "reveal" ? "phase-reveal" : "phase-intro"} ${strobe ? "strobe" : ""} ${
+        ultra ? "ultra" : ""
+      } ${shakeBurst ? "shakeBurst" : ""}`}
+    >
       {/* Background + Effects */}
       <div className="bg" aria-hidden="true">
         <div className="grain" />
@@ -234,6 +375,9 @@ export default function Page() {
       {/* Audio */}
       <audio ref={audioRef} src="/audio/party.mp3" preload="auto" />
 
+      {/* TOAST */}
+      {toast && <div className="toast">{toast}</div>}
+
       {/* FAKE ERROR OVERLAY (эхэнд) */}
       {fakeErrorStage !== "done" && (
         <div className="fakeError" role="alert" aria-live="assertive">
@@ -242,13 +386,17 @@ export default function Page() {
               <>
                 <div className="fakeTitle">404: Fun not found</div>
                 <div className="fakeSub">Та ямар нэгэн зүйл хайсан бол энд байх ёстой…</div>
-                <div className="fakeBar"><div className="fakeFill" /></div>
+                <div className="fakeBar">
+                  <div className="fakeFill" />
+                </div>
               </>
             ) : (
               <>
                 <div className="fakeTitle">🥸JOKE MY BABY🥸</div>
                 <div className="fakeSub">Хүлээсэнд баярлалаа</div>
-                <div className="fakeBar"><div className="fakeFill" /></div>
+                <div className="fakeBar">
+                  <div className="fakeFill" />
+                </div>
               </>
             )}
           </div>
@@ -259,15 +407,25 @@ export default function Page() {
       <section className="intro" aria-label="intro">
         <div className="introMega">
           <div className="emojiRain" aria-hidden="true">
-            <span>🎉</span><span>😂</span><span>🔥</span><span>💃</span><span>🕺</span><span>🎂</span>
-            <span>🥂</span><span>🎭</span><span>😈</span><span>✨</span><span>💥</span><span>🍾</span>
+            <span>🎉</span>
+            <span>😂</span>
+            <span>🔥</span>
+            <span>💃</span>
+            <span>🕺</span>
+            <span>🎂</span>
+            <span>🥂</span>
+            <span>🎭</span>
+            <span>😈</span>
+            <span>✨</span>
+            <span>💥</span>
+            <span>🍾</span>
           </div>
 
           <div className="introTop">
             <div className="glitch" data-text="WELCOME TO CHAOS">
               WELCOME TO PARTY
             </div>
-            {/* <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div> */}
+            <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div>
           </div>
 
           <div className="rot3dWrap" aria-label="3d rotating text">
@@ -293,9 +451,7 @@ export default function Page() {
               🔊 Товшоод PARTY-г эхлүүлье
             </button>
           ) : (
-            <div className="hint2">
-              {audioReady ? "Дуу явж байна… одоо ачаалж дуусгана 😈" : "Дуу асаах гэж оролдож байна…"}
-            </div>
+            <div className="hint2">{/* чи коммент хийсэн учраас хэвээр үлдээлээ */}</div>
           )}
 
           <div className="loadingLine">
@@ -312,12 +468,13 @@ export default function Page() {
               <div className="cdValue">ОДОООО! 🔥</div>
             ) : (
               <div className="cdValue">
-                {countdown.days}d {String(countdown.hours).padStart(2, "0")}:
-                {String(countdown.minutes).padStart(2, "0")}:
+                {countdown.days}d {String(countdown.hours).padStart(2, "0")}:{String(countdown.minutes).padStart(2, "0")}:
                 {String(countdown.seconds).padStart(2, "0")}
               </div>
             )}
           </div>
+
+          <div className="easterHint">🤫 Secret: type “party” or try Konami…</div>
         </div>
       </section>
 
@@ -340,10 +497,7 @@ export default function Page() {
               </button>
             </div>
 
-            <div className="gateMsg">
-              {gateMsg ? gateMsg : "Зөв хариулт байхгүй. Бүгд зөв. Гэхдээ зан чанар чинь илэрнэ 😭"}
-            </div>
-
+            <div className="gateMsg">{gateMsg ? gateMsg : "Зөв хариулт байхгүй. Бүгд зөв. Гэхдээ зан чанар чинь илэрнэ 😭"}</div>
             <div className="gateHint">* Сонгосны дараа автоматаар нэвтэрнэ</div>
           </div>
         </div>
@@ -356,6 +510,22 @@ export default function Page() {
             {strobe ? "⚡ Strobe ON" : "⚡ Strobe OFF"}
           </button>
 
+          {/* NEW: Shake enable */}
+          {!shakeEnabled ? (
+            <button className="chip" onClick={enableShake}>
+              💃 Shake асаах
+            </button>
+          ) : (
+            <button className="chip on" onClick={() => setShakeEnabled(false)}>
+              💃 Shake ON
+            </button>
+          )}
+
+          {/* NEW: Screenshot frame */}
+          <button className="chip" onClick={() => setFrameOpen(true)}>
+            📸 STORY
+          </button>
+
           {!audioReady && (
             <button className="chip" onClick={enableAudio}>
               🔊 Дуу асаах
@@ -365,6 +535,11 @@ export default function Page() {
           <a className="chip" href={info.mapLink} onClick={onMapClick}>
             🧭 Map
           </a>
+
+          {/* NEW: Ultra toggle (optional UI) */}
+          <button className={`chip ${ultra ? "on" : ""}`} onClick={() => setUltra((v) => !v)}>
+            {ultra ? "😈 Ultra ON" : "😇 Ultra OFF"}
+          </button>
         </div>
 
         <div className="card">
@@ -415,7 +590,7 @@ export default function Page() {
 
           <div className="rsvpRow">
             <div className="rsvpBox">
-              <h3>✅ RSVP</h3>
+              <h3>TELEGRAM СУВАГТАА НЭГДЭЭРЭЙ!!!</h3>
               <p className="rsvpText">Ирэхээ баталгаажуулаарай (QR scan эсвэл link):</p>
               <a className="rsvpLink" href={info.rsvpUrl} target="_blank" rel="noreferrer">
                 {info.rsvpUrl}
@@ -431,18 +606,60 @@ export default function Page() {
 
           <div className="divider" />
 
-          <div className="footerNote">Хоцорвол “DJ намайг хайж байна” гэж бодно шүү 😂</div>
+          <div className="footerNote">Хоцорвол мэдээж шийтгэлтэй шүү хонгор минь 😂😂😂</div>
         </div>
       </section>
+
+      {/* SCREENSHOT FRAME OVERLAY */}
+      {frameOpen && (
+        <div className="frameOverlay" role="dialog" aria-modal="true" aria-label="Screenshot frame" onClick={() => setFrameOpen(false)}>
+          <div className="frameModal" onClick={(e) => e.stopPropagation()}>
+            <div className="frameTop">
+              <div className="frameBadge">📸 STORY MODE</div>
+              <button className="frameClose" onClick={() => setFrameOpen(false)}>
+                ✖
+              </button>
+            </div>
+
+            <div className="frameCanvas">
+              <div className="frameGlow" aria-hidden="true" />
+              <div className="frameTitle">I SURVIVED</div>
+              <div className="frameName">{info.title}</div>
+              <div className="frameMeta">
+                <span>📅 {info.dateLabel}</span>
+                <span>⏰ {info.startTimeLabel}</span>
+              </div>
+
+              <div className="frameBottom">
+                <div className="frameLeft">
+                  <div className="framePlace">📍 {info.placeName}</div>
+                  <div className="frameAddr">{info.address}</div>
+                  <div className="frameHint2">👉 Энэ дэлгэц дээр screenshot дар 😈</div>
+                </div>
+
+                <div className="frameQR">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={qrImg} alt="RSVP QR" />
+                  <div className="frameQRHint">RSVP</div>
+                </div>
+              </div>
+
+              <div className="frameFooter">#BirthdayChaos</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MAP PRANK MODAL */}
       {mapPrankOpen && (
         <div className="mapPrankOverlay" role="dialog" aria-modal="true" aria-label="map prank">
           <div className="mapPrankModal">
             <div className="mapPrankTitle">🧭 “Нууц” байршил руу чиглүүлж байна…</div>
-            <div className="mapPrankSub">GPS: 😂😂😂 (за тоглолоо)</div>
-            <div className="mapPrankBar"><div className="mapPrankFill" /></div>
-            <div className="mapPrankHint">Одоо жинхэнэ map нээгдэнэ…</div>
+            <div className="mapPrankSub">GPS: 😂😂😂</div>
+            <div className="mapPrankBar">
+              <div className="mapPrankFill" />
+            </div>
+            <div className="mapPrankHint">Одоо map нээгдэнэ…</div>
           </div>
         </div>
       )}
