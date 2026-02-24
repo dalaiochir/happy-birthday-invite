@@ -505,3 +505,168 @@ body {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* =========================
+   FAKE ERROR OVERLAY
+========================= */
+.fakeError {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(10px);
+}
+.fakeCard {
+  width: min(520px, 92vw);
+  border-radius: 22px;
+  background: rgba(10, 10, 18, 0.82);
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 20px 120px rgba(0,0,0,0.7);
+  padding: 18px 16px;
+  text-align: center;
+  animation: fakePop 200ms ease-out 1;
+}
+.fakeCard.jk { animation: fakeJk 180ms ease-out 1; }
+@keyframes fakePop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes fakeJk { from { transform: scale(0.98); } to { transform: scale(1); } }
+.fakeTitle {
+  font-weight: 1000;
+  font-size: 22px;
+  letter-spacing: 0.3px;
+}
+.fakeSub {
+  margin-top: 8px;
+  opacity: 0.85;
+}
+.fakeBar {
+  margin: 14px auto 2px;
+  width: min(420px, 95%);
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  overflow: hidden;
+}
+.fakeFill {
+  height: 100%;
+  width: 35%;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.85);
+  animation: fakeLoad 900ms infinite ease-in-out;
+}
+@keyframes fakeLoad {
+  0%,100% { transform: translateX(0) scaleX(0.85); opacity: 0.65; }
+  50% { transform: translateX(160%) scaleX(1.15); opacity: 1; }
+}
+
+/* =========================
+   GATE: “Who are you?”
+========================= */
+.gateOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(8px);
+}
+.gateModal {
+  width: min(560px, 94vw);
+  border-radius: 24px;
+  background: rgba(10, 10, 18, 0.80);
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 22px 120px rgba(0,0,0,0.7);
+  padding: 16px 14px;
+  text-align: center;
+  animation: gatePop 220ms ease-out 1;
+}
+@keyframes gatePop { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.gateTitle { font-weight: 1000; font-size: 20px; }
+.gateQ { margin-top: 8px; font-size: 16px; opacity: 0.92; }
+
+.gateBtns {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.gateBtn {
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-radius: 16px;
+  padding: 10px 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+.gateBtn:hover { transform: translateY(-1px); }
+.gateBtn:active { transform: translateY(1px) scale(0.99); }
+.gateBtn.picked {
+  background: rgba(255,255,255,0.92);
+  color: #0b0b12;
+}
+
+.gateMsg {
+  margin-top: 12px;
+  padding: 12px 12px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  opacity: 0.95;
+}
+.gateHint { margin-top: 10px; font-size: 12px; opacity: 0.7; }
+
+/* =========================
+   MAP PRANK MODAL
+========================= */
+.mapPrankOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.68);
+  backdrop-filter: blur(8px);
+}
+.mapPrankModal {
+  width: min(520px, 92vw);
+  border-radius: 22px;
+  background: rgba(10, 10, 18, 0.80);
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 22px 120px rgba(0,0,0,0.7);
+  padding: 16px 14px;
+  text-align: center;
+  animation: mapPop 200ms ease-out 1;
+}
+@keyframes mapPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.mapPrankTitle { font-weight: 1000; font-size: 18px; }
+.mapPrankSub { margin-top: 8px; opacity: 0.86; }
+.mapPrankBar {
+  margin: 14px auto 6px;
+  width: min(420px, 95%);
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  overflow: hidden;
+}
+.mapPrankFill {
+  height: 100%;
+  width: 35%;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.85);
+  animation: mapLoad 700ms infinite ease-in-out;
+}
+@keyframes mapLoad {
+  0%,100% { transform: translateX(0) scaleX(0.85); opacity: 0.65; }
+  50% { transform: translateX(160%) scaleX(1.15); opacity: 1; }
+}
+.mapPrankHint { font-size: 12px; opacity: 0.75; }

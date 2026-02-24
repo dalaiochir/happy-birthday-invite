@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-//  aaaaaaaaaaaaaaa
+
 export default function Page() {
   const audioRef = useRef(null);
 
   // ====== SETTINGS (ЭНДЭЭС Л зас) ======
   const info = useMemo(
     () => ({
-      title: "🎂Баясаа & Энхжин төрсөн өдөр🎂",
+      title: "🎂Баясаа & Энхжин🎂 төрсөн өдөр",
       dateLabel: "2026-02-28 (Бямба)",
       startTimeLabel: "17:00 эхэлнэ",
       placeName: "Найрамдал явах замд байгаа олоод ирээрэй",
@@ -41,7 +41,12 @@ export default function Page() {
   );
   // ===================================
 
-  const [phase, setPhase] = useState("intro"); // intro -> reveal
+  // Phase: intro -> gate -> reveal
+  const [phase, setPhase] = useState("intro");
+
+  // Fake error overlay (эхэнд)
+  const [fakeErrorStage, setFakeErrorStage] = useState("show404"); // show404 -> showJK -> done
+
   const [audioReady, setAudioReady] = useState(false);
   const [audioBlocked, setAudioBlocked] = useState(false);
 
@@ -60,9 +65,30 @@ export default function Page() {
   const [memeOpen, setMemeOpen] = useState(false);
   const [memeSrc, setMemeSrc] = useState("");
 
-  // 1) Intro дуусмагц reveal
+  // Gate (who are you?) — торт captcha
+  const [gateOpen, setGateOpen] = useState(false);
+  const [gateAnswer, setGateAnswer] = useState(null); // "corner" | "center" | "all"
+  const [gateMsg, setGateMsg] = useState("");
+
+  // Map prank
+  const [mapPrankOpen, setMapPrankOpen] = useState(false);
+
+  // 0) Fake error overlay sequence
   useEffect(() => {
-    const t = setTimeout(() => setPhase("reveal"), 5200);
+    const t1 = setTimeout(() => setFakeErrorStage("showJK"), 1100); // 404 -> JK
+    const t2 = setTimeout(() => setFakeErrorStage("done"), 2000); // нийт 2с
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, []);
+
+  // 1) Intro дуусмагц gate нээнэ
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setPhase("gate");
+      setGateOpen(true);
+    }, 5200);
     return () => clearTimeout(t);
   }, []);
 
@@ -112,7 +138,7 @@ export default function Page() {
       const diff = target - now;
 
       if (diff <= 0) {
-        setCountdown((c) => ({ ...c, done: true, days: 0, hours: 0, minutes: 0, seconds: 0 }));
+        setCountdown({ done: true, days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
 
@@ -143,15 +169,11 @@ export default function Page() {
       setMemeOpen(true);
     };
 
-    // эхний pop: 7–12 сек дотор random
     const firstDelay = 7000 + Math.floor(Math.random() * 5000);
     const t1 = setTimeout(openRandom, firstDelay);
 
-    // дараагийн pop-ууд: 18–32 сек тутам random
     const id = setInterval(() => {
-      // Хэрэв аль хэдийн нээлттэй бол дараагийн удаа алгасна
       if (memeOpen) return;
-      // 60% магадлалтай pop
       if (Math.random() < 0.6) openRandom();
     }, 22000);
 
@@ -162,12 +184,41 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, info.memes]);
 
-  // QR image (libгүй) — qrserver ашиглаж байна
-  // Хэрэв external хүсэхгүй бол хэл, би local pure-js QR generator оруулж өгч болно (код урт болно).
+  // QR image (libгүй) — qrserver
   const qrImg = useMemo(() => {
     const encoded = encodeURIComponent(info.rsvpUrl);
     return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}`;
   }, [info.rsvpUrl]);
+
+  // Gate actions
+  const chooseGate = (choice) => {
+    setGateAnswer(choice);
+
+    if (choice === "corner") {
+      setGateMsg("Буланг сонгосон хүн бол амьдралын нарийн мэдрэмжтэй 🧐🍰 (VIP булан) — нэвтэр!");
+    } else if (choice === "center") {
+      setGateMsg("Гол хэсэг? Том зорилготой хүн байна 😤🎂 (Boss energy) — нэвтэр!");
+    } else {
+      setGateMsg("БҮГД гэдэг бол жинхэнэ party animal 😈🔥 (сэжигтэй) — нэвтэр!");
+    }
+
+    // 1.1 сек дараа reveal
+    setTimeout(() => {
+      setGateOpen(false);
+      setPhase("reveal");
+    }, 1100);
+  };
+
+  // Map prank: fake modal -> real link
+  const onMapClick = (e) => {
+    e.preventDefault();
+    setMapPrankOpen(true);
+
+    setTimeout(() => {
+      setMapPrankOpen(false);
+      window.open(info.mapLink, "_blank", "noopener,noreferrer");
+    }, 1400);
+  };
 
   return (
     <main className={`page ${phase === "reveal" ? "phase-reveal" : "phase-intro"} ${strobe ? "strobe" : ""}`}>
@@ -183,6 +234,27 @@ export default function Page() {
       {/* Audio */}
       <audio ref={audioRef} src="/audio/party.mp3" preload="auto" />
 
+      {/* FAKE ERROR OVERLAY (эхэнд) */}
+      {fakeErrorStage !== "done" && (
+        <div className="fakeError" role="alert" aria-live="assertive">
+          <div className={`fakeCard ${fakeErrorStage === "showJK" ? "jk" : ""}`}>
+            {fakeErrorStage === "show404" ? (
+              <>
+                <div className="fakeTitle">404: Fun not found</div>
+                <div className="fakeSub">Та инээд хайсан бол энд байх ёстой…</div>
+                <div className="fakeBar"><div className="fakeFill" /></div>
+              </>
+            ) : (
+              <>
+                <div className="fakeTitle">JK 😎 PARTY FOUND</div>
+                <div className="fakeSub">Систем: “Хөгжил ON” ✅</div>
+                <div className="fakeBar"><div className="fakeFill" /></div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* GALZUU LOADING / INTRO */}
       <section className="intro" aria-label="intro">
         <div className="introMega">
@@ -193,9 +265,9 @@ export default function Page() {
 
           <div className="introTop">
             <div className="glitch" data-text="WELCOME TO CHAOS">
-              WELCOME TO PARTY
+              WELCOME TO CHAOS
             </div>
-            {/* <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div> */}
+            <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div>
           </div>
 
           <div className="rot3dWrap" aria-label="3d rotating text">
@@ -209,7 +281,7 @@ export default function Page() {
 
           <h1 className="introTitle2">
             {info.title}
-            <span className="sub2">ЧИ УРИГДСАН!!!🥳</span>
+            <span className="sub2">ЧИ УРИГДСАН! 🥳</span>
           </h1>
 
           <div className="pulseBar" aria-hidden="true">
@@ -249,6 +321,34 @@ export default function Page() {
         </div>
       </section>
 
+      {/* WHO ARE YOU? GATE */}
+      {gateOpen && (
+        <div className="gateOverlay" role="dialog" aria-modal="true" aria-label="Торт captcha">
+          <div className="gateModal">
+            <div className="gateTitle">🕵️ Хэн бэ чи?</div>
+            <div className="gateQ">Тортны хамгийн гоё хэсэг?</div>
+
+            <div className="gateBtns">
+              <button className={`gateBtn ${gateAnswer === "corner" ? "picked" : ""}`} onClick={() => chooseGate("corner")}>
+                Булан 🍰
+              </button>
+              <button className={`gateBtn ${gateAnswer === "center" ? "picked" : ""}`} onClick={() => chooseGate("center")}>
+                Гол 🎂
+              </button>
+              <button className={`gateBtn ${gateAnswer === "all" ? "picked" : ""}`} onClick={() => chooseGate("all")}>
+                Бүгд 😈
+              </button>
+            </div>
+
+            <div className="gateMsg">
+              {gateMsg ? gateMsg : "Зөв хариулт байхгүй. Бүгд зөв. Гэхдээ зан чанар чинь илэрнэ 😭"}
+            </div>
+
+            <div className="gateHint">* Сонгосны дараа автоматаар нэвтэрнэ</div>
+          </div>
+        </div>
+      )}
+
       {/* REVEAL CONTENT */}
       <section className="content" aria-label="content">
         <div className="topActions">
@@ -262,7 +362,7 @@ export default function Page() {
             </button>
           )}
 
-          <a className="chip" href={info.mapLink} target="_blank" rel="noreferrer">
+          <a className="chip" href={info.mapLink} onClick={onMapClick}>
             🧭 Map
           </a>
         </div>
@@ -316,15 +416,14 @@ export default function Page() {
           <div className="rsvpRow">
             <div className="rsvpBox">
               <h3>✅ RSVP</h3>
-              <p className="rsvpText">
-                Ирэхээ баталгаажуулаарай (QR scan эсвэл link):
-              </p>
+              <p className="rsvpText">Ирэхээ баталгаажуулаарай (QR scan эсвэл link):</p>
               <a className="rsvpLink" href={info.rsvpUrl} target="_blank" rel="noreferrer">
                 {info.rsvpUrl}
               </a>
             </div>
 
             <div className="qrBox">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="qr" src={qrImg} alt="RSVP QR code" />
               <div className="qrHint">📱 Scan me</div>
             </div>
@@ -332,11 +431,21 @@ export default function Page() {
 
           <div className="divider" />
 
-          <div className="footerNote">
-            Хоцорвол мэдээж шийтгэлтэй шүү миний найзаа 😂😂😂
-          </div>
+          <div className="footerNote">Хоцорвол “DJ намайг хайж байна” гэж бодно шүү 😂</div>
         </div>
       </section>
+
+      {/* MAP PRANK MODAL */}
+      {mapPrankOpen && (
+        <div className="mapPrankOverlay" role="dialog" aria-modal="true" aria-label="map prank">
+          <div className="mapPrankModal">
+            <div className="mapPrankTitle">🧭 “Нууц” байршил руу чиглүүлж байна…</div>
+            <div className="mapPrankSub">GPS: 😂😂😂 (за тоглолоо)</div>
+            <div className="mapPrankBar"><div className="mapPrankFill" /></div>
+            <div className="mapPrankHint">Одоо жинхэнэ map нээгдэнэ…</div>
+          </div>
+        </div>
+      )}
 
       {/* MEME POPUP */}
       {memeOpen && (
