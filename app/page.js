@@ -8,11 +8,11 @@ export default function Page() {
   // ====== SETTINGS (ЭНДЭЭС Л зас) ======
   const info = useMemo(
     () => ({
-      title: "🎂 Далай-Очирын төрсөн өдөр 🎂",
-      dateLabel: "2026-03-07 (Бямба)",
-      startTimeLabel: "19:00 эхэлнэ",
-      placeName: "MK Rooftop Party Room",
-      address: "Улаанбаатар, … дүүрэг, … хороо, … байр",
+      title: "🎂Баясаа & Энхжин төрсөн өдөр🎂",
+      dateLabel: "2026-02-28 (Бямба)",
+      startTimeLabel: "17:00 эхэлнэ",
+      placeName: "Найрамдал явах замд байгаа олоод ирээрэй",
+      address: "Улаанбаатар, СХ дүүрэг, 34 хороо,",
       mapLink: "https://maps.app.goo.gl/4CZkfovgDujN7FaZ7",
 
       // Countdown-д ашиглах яг огноо/цаг (Asia/Ulaanbaatar гэж бодоод бичиж байна)
@@ -20,7 +20,7 @@ export default function Page() {
       eventISO: "2026-02-28T17:00:00+08:00",
 
       dresscode: "Инээдтэй / Colorful 🎭",
-      bring: "Сайн настроение 😄",
+      bring: "Сайхан настроение 😄",
       plan: [
         "19:00 — Ирэлт + Welcome drink 🥂",
         "19:30 — Сюрприз тоглоом 😈",
@@ -193,9 +193,9 @@ export default function Page() {
 
           <div className="introTop">
             <div className="glitch" data-text="WELCOME TO CHAOS">
-              WELCOME TO CHAOS
+              WELCOME TO PARTY
             </div>
-            <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div>
+            {/* <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div> */}
           </div>
 
           <div className="rot3dWrap" aria-label="3d rotating text">
@@ -209,7 +209,7 @@ export default function Page() {
 
           <h1 className="introTitle2">
             {info.title}
-            <span className="sub2">ЧИ УРИГДСАН! 🥳</span>
+            <span className="sub2">ЧИ УРИГДСАН!!!🥳</span>
           </h1>
 
           <div className="pulseBar" aria-hidden="true">
