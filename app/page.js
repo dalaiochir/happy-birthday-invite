@@ -627,24 +627,24 @@ export default function Page() {
               <div className="frameName">{info.title}</div>
               <div className="frameMeta">
                 <span>📅 {info.dateLabel}</span>
-                <span>⏰ {info.startTimeLabel}</span>
+                {/* <span>⏰ {info.startTimeLabel}</span> */}
               </div>
 
               <div className="frameBottom">
                 <div className="frameLeft">
-                  <div className="framePlace">📍 {info.placeName}</div>
-                  <div className="frameAddr">{info.address}</div>
-                  <div className="frameHint2">👉 Энэ дэлгэц дээр screenshot дар 😈</div>
+                  {/* <div className="framePlace">📍 {info.placeName}</div>
+                  <div className="frameAddr">{info.address}</div> */}
+                  {/* <div className="frameHint2">👉 Энэ дэлгэц дээр screenshot дар 😈</div> */}
                 </div>
 
-                <div className="frameQR">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                {/* <div className="frameQR">
+                  
                   <img src={qrImg} alt="RSVP QR" />
                   <div className="frameQRHint">RSVP</div>
-                </div>
+                </div> */}
               </div>
 
-              <div className="frameFooter">#BirthdayChaos</div>
+              <div className="frameFooter">#Birthday</div>
             </div>
           </div>
         </div>
