@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-
+//  aaaaaaaaaaaaaaa
 export default function Page() {
   const audioRef = useRef(null);
 
@@ -13,11 +13,11 @@ export default function Page() {
       startTimeLabel: "19:00 эхэлнэ",
       placeName: "MK Rooftop Party Room",
       address: "Улаанбаатар, … дүүрэг, … хороо, … байр",
-      mapLink: "https://maps.google.com/?q=Ulaanbaatar",
+      mapLink: "https://maps.app.goo.gl/4CZkfovgDujN7FaZ7",
 
       // Countdown-д ашиглах яг огноо/цаг (Asia/Ulaanbaatar гэж бодоод бичиж байна)
       // Формат: YYYY-MM-DDTHH:mm:ss+08:00 (UB +08)
-      eventISO: "2026-03-07T19:00:00+08:00",
+      eventISO: "2026-02-28T17:00:00+08:00",
 
       dresscode: "Инээдтэй / Colorful 🎭",
       bring: "Сайн настроение 😄",
@@ -32,10 +32,10 @@ export default function Page() {
 
       // RSVP холбоос (QR дээр очно)
       // Google Form / Notion RSVP / Telegram group link гээд юу ч байж болно
-      rsvpUrl: "https://t.me/your_group_or_form_link",
+      rsvpUrl: "https://t.me/+TJao7C6dhEtiZWM9",
 
       // Random meme popup-д ашиглах local meme зургууд
-      memes: ["/memes/meme1.jpg", "/memes/meme2.jpg", "/memes/meme3.jpg"],
+      memes: ["/memes/meme1.png", "/memes/meme2.png", "/memes/meme3.png" , "/memes/meme4.png"],
     }),
     []
   );
@@ -333,7 +333,7 @@ export default function Page() {
           <div className="divider" />
 
           <div className="footerNote">
-            Хоцорвол “DJ намайг хайж байна” гэж бодно шүү 😂
+            Хоцорвол мэдээж шийтгэлтэй шүү миний найзаа 😂😂😂
           </div>
         </div>
       </section>
