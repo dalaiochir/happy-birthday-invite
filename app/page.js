@@ -88,7 +88,7 @@ export default function Page() {
     const t = setTimeout(() => {
       setPhase("gate");
       setGateOpen(true);
-    }, 5200);
+    }, 8200);
     return () => clearTimeout(t);
   }, []);
 
@@ -197,7 +197,7 @@ export default function Page() {
     if (choice === "corner") {
       setGateMsg("Буланг сонгосон хүн бол амьдралын нарийн мэдрэмжтэй 🧐🍰 (VIP булан) — нэвтэр!");
     } else if (choice === "center") {
-      setGateMsg("Гол хэсэг? Том зорилготой хүн байна 😤🎂 (Boss energy) — нэвтэр!");
+      setGateMsg("Үнэхээр ТОМ зорилготой хүн байна 😤🎂 (Boss energy) — нэвтэр!");
     } else {
       setGateMsg("БҮГД гэдэг бол жинхэнэ party animal 😈🔥 (сэжигтэй) — нэвтэр!");
     }
@@ -241,7 +241,7 @@ export default function Page() {
             {fakeErrorStage === "show404" ? (
               <>
                 <div className="fakeTitle">404: Fun not found</div>
-                <div className="fakeSub">Та инээд хайсан бол энд байх ёстой…</div>
+                <div className="fakeSub">Та ямар нэгэн зүйл хайсан бол энд байх ёстой…</div>
                 <div className="fakeBar"><div className="fakeFill" /></div>
               </>
             ) : (
@@ -267,7 +267,7 @@ export default function Page() {
             <div className="glitch" data-text="WELCOME TO CHAOS">
               WELCOME TO PARTY
             </div>
-            <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div>
+            {/* <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div> */}
           </div>
 
           <div className="rot3dWrap" aria-label="3d rotating text">
