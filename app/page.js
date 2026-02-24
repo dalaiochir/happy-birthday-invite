@@ -75,8 +75,8 @@ export default function Page() {
 
   // 0) Fake error overlay sequence
   useEffect(() => {
-    const t1 = setTimeout(() => setFakeErrorStage("showJK"), 1100); // 404 -> JK
-    const t2 = setTimeout(() => setFakeErrorStage("done"), 2000); // нийт 2с
+    const t1 = setTimeout(() => setFakeErrorStage("showJK"), 3000); // 404 -> JK
+    const t2 = setTimeout(() => setFakeErrorStage("done"), 4000); // нийт 2с
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -206,7 +206,7 @@ export default function Page() {
     setTimeout(() => {
       setGateOpen(false);
       setPhase("reveal");
-    }, 1100);
+    }, 4000);
   };
 
   // Map prank: fake modal -> real link
@@ -246,8 +246,8 @@ export default function Page() {
               </>
             ) : (
               <>
-                <div className="fakeTitle">JK 😎 PARTY FOUND</div>
-                <div className="fakeSub">Систем: “Хөгжил ON” ✅</div>
+                <div className="fakeTitle">🥸JOKE MY BABY🥸</div>
+                <div className="fakeSub">Хүлээсэнд баярлалаа</div>
                 <div className="fakeBar"><div className="fakeFill" /></div>
               </>
             )}
@@ -265,7 +265,7 @@ export default function Page() {
 
           <div className="introTop">
             <div className="glitch" data-text="WELCOME TO CHAOS">
-              WELCOME TO CHAOS
+              WELCOME TO PARTY
             </div>
             <div className="tiny">{audioReady ? "🎶 DUU ON ✅" : "🎶 DUU ON гэсэн горим..."}</div>
           </div>
@@ -281,7 +281,7 @@ export default function Page() {
 
           <h1 className="introTitle2">
             {info.title}
-            <span className="sub2">ЧИ УРИГДСАН! 🥳</span>
+            <span className="sub2">ЧИ УРИГДСАААН ХОНГОР МИНЬ! 🥳</span>
           </h1>
 
           <div className="pulseBar" aria-hidden="true">
@@ -330,7 +330,7 @@ export default function Page() {
 
             <div className="gateBtns">
               <button className={`gateBtn ${gateAnswer === "corner" ? "picked" : ""}`} onClick={() => chooseGate("corner")}>
-                Булан 🍰
+                Талх 🍰
               </button>
               <button className={`gateBtn ${gateAnswer === "center" ? "picked" : ""}`} onClick={() => chooseGate("center")}>
                 Гол 🎂
