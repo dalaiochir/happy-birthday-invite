@@ -238,6 +238,15 @@ export default function Page() {
   const showToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(""), 1600);
+      const vibrate = (pattern = [80, 40, 80]) => {
+    try {
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        navigator.vibrate(pattern);
+      }
+    } catch {
+      // ignore (зарим браузер дэмжихгүй)
+    }
+  };
   };
 
   // =========================
@@ -342,6 +351,7 @@ export default function Page() {
 
         setShakeBurst(true);
         showToast("🔊 BASS DROP!!!");
+        vibrate(ultra ? [80, 40, 160, 40, 120] : [60, 30, 120, 30, 80]); // party vibe
 
         // Түр strobe асаах (хүсэхгүй бол энэ 2 мөрийг устга)
         setStrobe(true);
