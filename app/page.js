@@ -88,7 +88,7 @@ export default function Page() {
     const t = setTimeout(() => {
       setPhase("gate");
       setGateOpen(true);
-    }, 8200);
+    }, 10000);
     return () => clearTimeout(t);
   }, []);
 
@@ -154,7 +154,7 @@ export default function Page() {
     };
 
     tick();
-    const id = setInterval(tick, 1000);
+    const id = setInterval(tick, 2000);
     return () => clearInterval(id);
   }, [info.eventISO]);
 
@@ -175,7 +175,7 @@ export default function Page() {
     const id = setInterval(() => {
       if (memeOpen) return;
       if (Math.random() < 0.6) openRandom();
-    }, 22000);
+    }, 30000);
 
     return () => {
       clearTimeout(t1);
@@ -217,7 +217,7 @@ export default function Page() {
     setTimeout(() => {
       setMapPrankOpen(false);
       window.open(info.mapLink, "_blank", "noopener,noreferrer");
-    }, 1400);
+    }, 3500);
   };
 
   return (
