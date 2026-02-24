@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function Page() {
   const audioRef = useRef(null);
+  const airhornRef = useRef(null);
 
   // ====== SETTINGS (ЭНДЭЭС Л зас) ======
   const info = useMemo(
@@ -352,6 +353,25 @@ export default function Page() {
         setShakeBurst(true);
         showToast("🔊 BASS DROP!!!");
         vibrate(ultra ? [80, 40, 160, 40, 120] : [60, 30, 120, 30, 80]); // party vibe
+        playAirhorn();
+        const playAirhorn = () => {
+  const a = airhornRef.current;
+  if (!a) return;
+
+  try {
+    a.currentTime = 0;
+    a.volume = 1;
+    a.play();
+
+    // 0.3 секунд дараа зогсооно
+    setTimeout(() => {
+      a.pause();
+      a.currentTime = 0;
+    }, 300);
+  } catch {
+    // ignore
+  }
+};
 
         // Түр strobe асаах (хүсэхгүй бол энэ 2 мөрийг устга)
         setStrobe(true);
@@ -384,6 +404,7 @@ export default function Page() {
 
       {/* Audio */}
       <audio ref={audioRef} src="/audio/party.mp3" preload="auto" />
+      <audio ref={airhornRef} src="/audio/airhorn.mp3" preload="auto" />
 
             {/* SHAKE CONFETTI BLAST (CSS particles) */}
       <div className={`shakeBlast ${shakeBurst ? "on" : ""}`} aria-hidden="true">
