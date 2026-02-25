@@ -19,6 +19,9 @@ export default function Page() {
       // Countdown-д ашиглах яг огноо/цаг (UB +08)
       eventISO: "2026-02-28T17:00:00+08:00",
 
+      secretCode: "PARTY", // <-- энд нууц кодоо тавь
+      secretHint: "Нууц кодоо оруул 😈", // хүсвэл өөрчил
+
       dresscode: "Инээдтэй / Colorful 🎭",
       bring: "Сайхан настроение 😄",
       plan: [
@@ -70,6 +73,22 @@ export default function Page() {
   // Map prank
   const [mapPrankOpen, setMapPrankOpen] = useState(false);
 
+    // =========================
+  // NEW: PRIVATE CODE GATE
+  // =========================
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState("");
+
+    useEffect(() => {
+    try {
+      const saved = localStorage.getItem("mk_party_unlocked");
+      if (saved === "1") setIsUnlocked(true);
+    } catch {
+      // ignore
+    }
+  }, []);
+
   // =========================
   // NEW: Ultra Mode (Konami / party)
   // =========================
@@ -87,27 +106,44 @@ export default function Page() {
   const [shakeEnabled, setShakeEnabled] = useState(false);
   const [shakeBurst, setShakeBurst] = useState(false);
 
+    useEffect(() => {
+    if (!isUnlocked) {
+      setFakeErrorStage("show404");
+      setPhase("intro");
+      setGateOpen(false);
+      setMemeOpen(false);
+      setMapPrankOpen(false);
+    }
+  }, [isUnlocked]);
+
   // 0) Fake error overlay sequence (ЧИНИЙ ХУГАЦАА ХЭВЭЭР)
   useEffect(() => {
+
+    if (!isUnlocked) return;
+
     const t1 = setTimeout(() => setFakeErrorStage("showJK"), 3000); // 404 -> JK
     const t2 = setTimeout(() => setFakeErrorStage("done"), 4000); // нийт 4с
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, []);
+  }, [isUnlocked]);
 
   // 1) Intro дуусмагц gate нээнэ (ЧИНИЙ ХУГАЦАА ХЭВЭЭР)
   useEffect(() => {
-    const t = setTimeout(() => {
-      setPhase("gate");
-      setGateOpen(true);
-    }, 10000);
-    return () => clearTimeout(t);
-  }, []);
+  if (!isUnlocked) return;
+
+  const t = setTimeout(() => {
+    setPhase("gate");
+    setGateOpen(true);
+  }, 10000);
+
+  return () => clearTimeout(t);
+}, [isUnlocked]);
 
   // 2) Autoplay оролдлого (iOS дээр блоклогдож магадгүй)
   useEffect(() => {
+    if (!isUnlocked) return;
     const a = audioRef.current;
     if (!a) return;
 
@@ -128,7 +164,7 @@ export default function Page() {
     };
 
     tryPlay();
-  }, []);
+  }, [isUnlocked]);
 
   const enableAudio = async () => {
     const a = audioRef.current;
@@ -141,6 +177,31 @@ export default function Page() {
     } catch {
       setAudioBlocked(true);
     }
+  };
+
+    const unlockSite = () => {
+    const expected = String(info.secretCode || "").trim().toLowerCase();
+    const got = String(codeInput || "").trim().toLowerCase();
+
+    if (!expected) {
+      setCodeError("Нууц код тохируулаагүй байна 😭");
+      return;
+    }
+
+    if (got === expected) {
+      setCodeError("");
+      setIsUnlocked(true);
+      try {
+        localStorage.setItem("mk_party_unlocked", "1");
+      } catch {
+        // ignore
+      }
+      // unlock interaction дээр audio autoplay боломжтой болдог
+      enableAudio();
+      return;
+    }
+
+    setCodeError("Буруу код байна аа 😈");
   };
 
   // 3) Countdown timer (ЧИНИЙ interval ХЭВЭЭР: 2000ms)
@@ -389,6 +450,50 @@ export default function Page() {
 
   return (
     <main
+
+          {/* PRIVATE LOCK SCREEN */}
+      {!isUnlocked && (
+        <div className="lockOverlay" role="dialog" aria-modal="true" aria-label="Private access">
+          <div className="lockCard">
+            <div className="lockTitle">🔒 PRIVATE PARTY ACCESS</div>
+            <div className="lockSub">{info.secretHint}</div>
+
+            <input
+              className="lockInput"
+              value={codeInput}
+              onChange={(e) => {
+                setCodeInput(e.target.value);
+                setCodeError("");
+              }}
+              placeholder="Нууц код..."
+              autoComplete="off"
+              spellCheck={false}
+              inputMode="text"
+            />
+
+            {codeError && <div className="lockErr">{codeError}</div>}
+
+            <div className="lockBtns">
+              <button className="lockBtn" onClick={unlockSite}>
+                НЭВТРЭХ 😈
+              </button>
+              <button
+                className="lockBtn ghost"
+                onClick={() => {
+                  setCodeInput("");
+                  setCodeError("");
+                }}
+              >
+                ЦЭВЭРЛЭХ
+              </button>
+            </div>
+
+            <div className="lockHint">
+              * Зөв код оруулмагц л бүх animation + sound эхэлнэ
+            </div>
+          </div>
+        </div>
+      )}
       className={`page ${phase === "reveal" ? "phase-reveal" : "phase-intro"} ${strobe ? "strobe" : ""} ${
         ultra ? "ultra" : ""
       } ${shakeBurst ? "shakeBurst" : ""}`}
