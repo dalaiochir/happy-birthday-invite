@@ -450,8 +450,12 @@ export default function Page() {
 
   return (
     <main
+      
+      className={`page ${phase === "reveal" ? "phase-reveal" : "phase-intro"} ${strobe ? "strobe" : ""} ${
+        ultra ? "ultra" : ""
+      } ${shakeBurst ? "shakeBurst" : ""}`}
+    >
 
-          {/* PRIVATE LOCK SCREEN */}
       {!isUnlocked && (
         <div className="lockOverlay" role="dialog" aria-modal="true" aria-label="Private access">
           <div className="lockCard">
@@ -494,10 +498,8 @@ export default function Page() {
           </div>
         </div>
       )}
-      className={`page ${phase === "reveal" ? "phase-reveal" : "phase-intro"} ${strobe ? "strobe" : ""} ${
-        ultra ? "ultra" : ""
-      } ${shakeBurst ? "shakeBurst" : ""}`}
-    >
+
+
       {/* Background + Effects */}
       <div className="bg" aria-hidden="true">
         <div className="grain" />
