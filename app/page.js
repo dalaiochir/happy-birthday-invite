@@ -201,7 +201,7 @@ export default function Page() {
       return;
     }
 
-    setCodeError("Буруу код байна аа 😈");
+    setCodeError("YOU ARE IMPOSTER!!! 😈");
   };
 
   // 3) Countdown timer (ЧИНИЙ interval ХЭВЭЭР: 2000ms)
@@ -493,7 +493,7 @@ export default function Page() {
             </div>
 
             <div className="lockHint">
-              * Зөв код оруулмагц л бүх animation + sound эхэлнэ
+              * Халаалттай бүлгэмийн гишүүд л зөвхөн мэднэ 😎
             </div>
           </div>
         </div>
