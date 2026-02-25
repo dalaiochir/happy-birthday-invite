@@ -80,15 +80,6 @@ export default function Page() {
   const [codeInput, setCodeInput] = useState("");
   const [codeError, setCodeError] = useState("");
 
-    useEffect(() => {
-    try {
-      const saved = localStorage.getItem("mk_party_unlocked");
-      if (saved === "1") setIsUnlocked(true);
-    } catch {
-      // ignore
-    }
-  }, []);
-
   // =========================
   // NEW: Ultra Mode (Konami / party)
   // =========================
@@ -191,11 +182,11 @@ export default function Page() {
     if (got === expected) {
       setCodeError("");
       setIsUnlocked(true);
-      try {
-        localStorage.setItem("mk_party_unlocked", "1");
-      } catch {
-        // ignore
-      }
+      // try {
+      //   localStorage.setItem("mk_party_unlocked", "1");
+      // } catch {
+      //   // ignore
+      // }
       // unlock interaction дээр audio autoplay боломжтой болдог
       enableAudio();
       return;
